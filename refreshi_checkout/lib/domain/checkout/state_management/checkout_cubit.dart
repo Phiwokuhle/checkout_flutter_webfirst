@@ -33,7 +33,7 @@ class CheckoutController extends ChangeNotifier {
     try{
       _requestId??='RF-${DateTime.now().microsecondsSinceEpoch}';
       return await repository.create(requestId:_requestId!,serviceIds:selected.toList()..sort(),scheduledAt:scheduled,totalCents:totalCents);
-    }catch(_){error='Unable to place order. Please retry.';return null;}
+    }catch(e){error='Unable to place order: '+e.toString();return null;}
     finally{submitting=false;notifyListeners();}
   }
 }
