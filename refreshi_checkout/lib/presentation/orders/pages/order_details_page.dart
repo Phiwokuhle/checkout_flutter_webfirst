@@ -39,7 +39,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage>{
  const SizedBox(height:12),
  Text('Scheduled: '+order!.scheduled.toLocal().toString()),
  Text('Services: '+order!.services.join(', ')),
- Text('Total: '+String.fromCharCode(36)+(order!.total/100).toStringAsFixed(2)),
+ Text('Total: '+'R '+(order!.total/100).toStringAsFixed(2)),
  ]))),
  const SizedBox(height:20),
  Text('Timeline',style:Theme.of(context).textTheme.titleLarge),
