@@ -13,7 +13,11 @@ class LocalOrderLink extends Link {
   @override
   Stream<Response> request(Request request,[NextLink? forward]) async* {
     try {
-      final operation=request.operation.operationName ?? (printNode(request.operation.document).contains('CreateOrder') ? 'CreateOrder' : 'GetOrder');
+      final document=printNode(request.operation.document);
+      final operation=request.operation.operationName ??
+          (document.contains('GetServices') ? 'GetServices' :
+           document.contains('CreateOrder') ? 'CreateOrder' :
+           document.contains('GetOrder') ? 'GetOrder' : 'Unknown');
       if(operation=='GetServices'){
         final envelope=await _fixtures.load('GetServices');
         await Future<void>.delayed(const Duration(milliseconds:350));
