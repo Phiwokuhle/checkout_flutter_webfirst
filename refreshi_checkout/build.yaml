@@ -1,13 +1,9 @@
 targets:
   $default:
-    sources:
-      - $package$
-      - lib/**
-      - graphql/**
     builders:
       graphql_codegen:
         options:
-          assetsPath: graphql/**.graphql
-          outputDirectory: /lib/data/graphql/generated
+          assetsPath: lib/data/graphql/**.graphql
+          outputDirectory: generated
           clients:
             - graphql
