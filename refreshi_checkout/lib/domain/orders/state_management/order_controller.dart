@@ -10,7 +10,7 @@ class OrderController extends ChangeNotifier {
   String? error;
   Timer? _timer;
   Future<void> load(String id)async{
-    loading=true;error=null;notifyListeners();
+    loading=order==null;error=null;notifyListeners();
     try{
       order=await repository.find(id);
       if(order==null)error='Order not found.';
