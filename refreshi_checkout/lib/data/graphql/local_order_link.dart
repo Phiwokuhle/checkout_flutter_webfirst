@@ -3,16 +3,22 @@ import 'package:graphql/client.dart';
 import 'package:gql/language.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/checkout/data/order_store.dart';
+import 'local_graphql_fixtures.dart';
 
 /// Local GraphQL resolver. No HTTP service or payment gateway is used.
 class LocalOrderLink extends Link {
   LocalOrderLink(SharedPreferences preferences):_store=OrderStore(preferences);
   final OrderStore _store;
+  final LocalGraphqlFixtures _fixtures = const LocalGraphqlFixtures();
   @override
   Stream<Response> request(Request request,[NextLink? forward]) async* {
     try {
       final operation=request.operation.operationName ?? (printNode(request.operation.document).contains('CreateOrder') ? 'CreateOrder' : 'GetOrder');
-      if(operation=='CreateOrder'){
+      if(operation=='GetServices'){
+        final envelope=await _fixtures.load('GetServices');
+        await Future<void>.delayed(const Duration(milliseconds:350));
+        yield Response(response: const <String,dynamic>{},data:Map<String,dynamic>.from(envelope['data'] as Map));
+      }else if(operation=='CreateOrder'){
         final input=Map<String,dynamic>.from(request.variables['input'] as Map);
         if(input['cardToken']=='tok_declined')throw StateError('The simulated card hold was declined. Please try again.');
         if(input['cardToken']=='tok_timeout'){await Future<void>.delayed(const Duration(seconds:2));throw TimeoutException('The simulated payment provider timed out. Please retry.');}
@@ -23,10 +29,16 @@ class LocalOrderLink extends Link {
           DateTime.parse(input['scheduledAt'] as String),
           input['totalCents'] as int,
         );
-        yield Response(response: const <String, dynamic>{}, data:{'__typename':'Mutation','createOrder':_toGraphQL(order)});
+        final envelope=await _fixtures.load('CreateOrder');
+        final data=Map<String,dynamic>.from(envelope['data'] as Map);
+        final fixture=Map<String,dynamic>.from(data['createOrder'] as Map);
+        yield Response(response: const <String,dynamic>{},data:{'__typename':'Mutation','createOrder':{...fixture,..._toGraphQL(order)}});
       }else if(operation=='GetOrder'){
         final order=await _store.find(request.variables['id'] as String);
-        yield Response(response: const <String, dynamic>{}, data:{'__typename':'Query','order':order==null?null:_toGraphQL(order)});
+        final envelope=await _fixtures.load('GetOrder');
+        final data=Map<String,dynamic>.from(envelope['data'] as Map);
+        final fixture=Map<String,dynamic>.from(data['order'] as Map);
+        yield Response(response: const <String,dynamic>{},data:{'__typename':'Query','order':order==null?null:{...fixture,..._toGraphQL(order)}});
       }else{
         yield Response(response: const <String, dynamic>{}, errors:[GraphQLError(message:'Unsupported operation')]);
       }
