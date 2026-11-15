@@ -3,3 +3,6 @@ type Mutation { createOrder(input: CreateOrderInput!): Order! }
 input CreateOrderInput { requestId: ID!, serviceIds: [ID!]!, scheduledAt: String!, totalCents: Int!, cardToken: String! }
 enum HoldStatus { PENDING PLACED }
 type Order { id: ID!, serviceIds: [ID!]!, scheduledAt: String!, totalCents: Int!, createdAt: String!, holdStatus: HoldStatus! }
+
+type Service { id: ID!, name: String!, description: String!, durationMinutes: Int!, priceCents: Int!, badge: String }
+extend type Query { services: [Service!]! }
