@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:refreshi_checkout/core/config/za_format.dart';
 import 'package:go_router/go_router.dart';
 import 'package:refreshi_checkout/core/config/route_names.dart';
 import 'package:refreshi_checkout/core/di/injection.dart';
@@ -29,9 +30,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage>{
  Card(child:Padding(padding:const EdgeInsets.all(20),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
  Text('Order '+controller.order!.id,style:Theme.of(context).textTheme.titleLarge),
  const SizedBox(height:12),
- Text('Scheduled: '+controller.order!.scheduled.toLocal().toString()),
- Text('Services: '+controller.order!.services.join(', ')),
- Text('Total: R '+(controller.order!.total/100).toStringAsFixed(2)),
+ Text('Scheduled: '+ZaFormat.schedule(controller.order!.scheduled)),
+ Text('Services: '+controller.order!.services.map(ZaFormat.serviceName).join(', ')),
+ Text('Total: '+ZaFormat.money(controller.order!.total)),
  ]))),
  const SizedBox(height:20),
  Text('Timeline',style:Theme.of(context).textTheme.titleLarge),
