@@ -1,0 +1,15 @@
+{
+  "data": {
+    "createOrder": {
+      "__typename": "Order",
+      "id": "RF-example",
+      "serviceIds": [
+        "office-refresh"
+      ],
+      "scheduledAt": "2026-11-24T09:00:00.000",
+      "totalCents": 4800,
+      "createdAt": "2026-11-16T09:00:00.000",
+      "holdStatus": "PENDING"
+    }
+  }
+}
