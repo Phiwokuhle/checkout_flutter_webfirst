@@ -35,6 +35,7 @@ class LocalOrderLink extends Link {
     }
   }
   Map<String,dynamic> _toGraphQL(CheckoutOrder order)=>{
+    '__typename':'Order',
     'id':order.id,
     'serviceIds':order.services,
     'scheduledAt':order.scheduled.toIso8601String(),
