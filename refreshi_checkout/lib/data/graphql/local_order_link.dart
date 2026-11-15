@@ -14,6 +14,8 @@ class LocalOrderLink extends Link {
       final operation=request.operation.operationName ?? (printNode(request.operation.document).contains('CreateOrder') ? 'CreateOrder' : 'GetOrder');
       if(operation=='CreateOrder'){
         final input=Map<String,dynamic>.from(request.variables['input'] as Map);
+        if(input['cardToken']=='tok_declined')throw StateError('The simulated card hold was declined. Please try again.');
+        if(input['cardToken']=='tok_timeout'){await Future<void>.delayed(const Duration(seconds:2));throw TimeoutException('The simulated payment provider timed out. Please retry.');}
         if(input['cardToken']!='tok_visa_4242')throw StateError('Invalid demo card token');
         final order=await _store.create(
           input['requestId'] as String,
