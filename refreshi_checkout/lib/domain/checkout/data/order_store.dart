@@ -15,6 +15,7 @@ class CheckoutOrder {
 class OrderStore {
   OrderStore(this.prefs);
   final SharedPreferences prefs;
+  final Map<String,Future<CheckoutOrder>> _pending={};
   static const key = 'refreshi_orders_v2';
   Future<List<CheckoutOrder>> all() async {
     await Future<void>.delayed(const Duration(milliseconds: 350));
@@ -27,7 +28,9 @@ class OrderStore {
     for(final order in orders){if(order.id==id)return order;}
     return null;
   }
-  Future<CheckoutOrder> create(String id,List<String> services,DateTime scheduled,int total) async {
+  Future<CheckoutOrder> create(String id,List<String> services,DateTime scheduled,int total) =>
+    _pending.putIfAbsent(id,()=>_create(id,services,scheduled,total)).whenComplete(()=>_pending.remove(id));
+  Future<CheckoutOrder> _create(String id,List<String> services,DateTime scheduled,int total) async {
     final orders=await all();
     for(final order in orders){if(order.id==id)return order;}
     await Future<void>.delayed(const Duration(milliseconds: 650));
