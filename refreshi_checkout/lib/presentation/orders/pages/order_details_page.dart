@@ -1,0 +1,12 @@
+import 'package:flutter/material.dart';
+
+class OrderDetailsPage extends StatelessWidget {
+  const OrderDetailsPage({super.key, required this.orderId});
+
+  final String orderId;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(body: Center(child: Text('Order: $orderId')));
+  }
+}

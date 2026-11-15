@@ -1,6 +1,0 @@
-mutation CreateOrder($input: CreateOrderInput!) {
-  createOrder(input: $input) { id idempotencyKey scheduledAt totalCents cardLast4 status services { id name priceCents durationMinutes } }
-}
-query GetOrder($id: ID!) {
-  order(id: $id) { id idempotencyKey scheduledAt totalCents cardLast4 status services { id name priceCents durationMinutes } }
-}
