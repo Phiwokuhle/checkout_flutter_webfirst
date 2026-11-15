@@ -13,7 +13,7 @@ class GraphqlOrderRepository implements OrderRepository {
   Future<CheckoutOrder> create({required String requestId,required List<String> serviceIds,required DateTime scheduledAt,required int totalCents})async{
     final result=await client.mutate(MutationOptions(
       document:parseString(r'''mutation CreateOrder($input: CreateOrderInput!) { createOrder(input: $input) { id serviceIds scheduledAt totalCents createdAt holdStatus } }'''),
-      variables:{'input':{'requestId':requestId,'serviceIds':serviceIds,'scheduledAt':scheduledAt.toIso8601String(),'totalCents':totalCents,'cardToken':'tok_visa_4242'}},
+      variables:{'input':{'requestId':requestId,'serviceIds':serviceIds,'scheduledAt':scheduledAt.toIso8601String(),'totalCents':totalCents,'cardToken':Uri.base.queryParameters['simulate']=='declined'?'tok_declined':Uri.base.queryParameters['simulate']=='timeout'?'tok_timeout':'tok_visa_4242'}},
       fetchPolicy:FetchPolicy.noCache,
     ));
     if(result.hasException||result.data==null)throw StateError('Order creation failed');
