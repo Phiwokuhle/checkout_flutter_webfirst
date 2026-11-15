@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import '../repositories/order_repository.dart';
 import '../data/order_store.dart';
+import '../data/service_model.dart';
 
 class CheckoutController extends ChangeNotifier {
   CheckoutController(this.repository);
@@ -12,7 +13,13 @@ class CheckoutController extends ChangeNotifier {
   bool submitting=false;
   String? _requestId;
   int get totalCents=>_prices.entries.where((e)=>selected.contains(e.key)).fold(0,(a,e)=>a+e.value);
-  static const _prices={'office-refresh':4800,'hepa-decontamination':8500,'duct-treatment':12000};
+  Map<String,int> _prices=const {};
+  void setCatalog(List<ServiceModel> services) {
+    _prices={for(final service in services) service.id:service.priceCents};
+    selected.removeWhere((id)=>!_prices.containsKey(id));
+    _requestId=null;
+    notifyListeners();
+  }
   DateTime? get scheduledAt=>date==null||hour==null||minute==null?null:DateTime(date!.year,date!.month,date!.day,hour!,minute!);
   void toggle(String id){
     if(submitting)return;
