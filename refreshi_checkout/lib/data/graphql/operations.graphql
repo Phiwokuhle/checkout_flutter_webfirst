@@ -4,3 +4,5 @@ mutation CreateOrder($input: CreateOrderInput!) {
 query GetOrder($id: ID!) {
  order(id: $id) { id serviceIds scheduledAt totalCents createdAt holdStatus }
 }
+
+query GetServices { services { id name description durationMinutes priceCents badge } }
