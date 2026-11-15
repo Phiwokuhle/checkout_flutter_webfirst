@@ -33,3 +33,13 @@ See SOLUTION.md for design decisions and limitations.
 - Verify Android/iOS startup where devices are available.
 
 The web app uses path-based URLs, so a static hosting provider must serve `index.html` for unknown application routes. The narrated 5–10 minute assessment walkthrough must be recorded separately.
+
+## Local GraphQL backend simulation
+
+Backend-shaped GraphQL response envelopes are bundled as JSON under `assets/graphql/`:
+
+- `catalog.json`: `data.services` for the `GetServices` query.
+- `create_order.json`: template for `data.createOrder`; request-specific values are resolved and persisted by the local GraphQL link.
+- `get_order.json`: template for `data.order`; persisted order values and current hold status override the example values.
+
+The checkout page calls `GraphqlServiceCatalog` through the same `GraphQLClient` used for orders, and handles loading, empty and error states. Prices come from the GraphQL response rather than UI constants. `LocalOrderLink` resolves the three operations using these files and `OrderStore` provides persistence and idempotency. The GraphQL schema and operation documents remain the source for generated models. To swap in a backend later, replace the local link with an HTTP GraphQL link while keeping the repository interface.
