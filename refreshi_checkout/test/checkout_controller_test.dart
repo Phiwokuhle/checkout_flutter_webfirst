@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:refreshi_checkout/domain/checkout/data/order_store.dart';
+import 'package:refreshi_checkout/domain/checkout/data/service_model.dart';
 import 'package:refreshi_checkout/domain/checkout/repositories/order_repository.dart';
 import 'package:refreshi_checkout/domain/checkout/state_management/checkout_cubit.dart';
 
@@ -14,9 +15,18 @@ class FakeOrders implements OrderRepository {
   Future<CheckoutOrder?> find(String id) async => null;
 }
 
+void setUpCatalog(CheckoutController controller) {
+  controller.setCatalog(const [
+    ServiceModel(id:'office-refresh',name:'Office',description:'Office',durationMinutes:60,priceCents:4800),
+    ServiceModel(id:'hepa-decontamination',name:'HEPA',description:'HEPA',durationMinutes:90,priceCents:8500),
+    ServiceModel(id:'duct-treatment',name:'Duct',description:'Duct',durationMinutes:45,priceCents:12000),
+  ]);
+}
+
 void main() {
   test('checkout accepts no more than two services', () {
     final controller=CheckoutController(FakeOrders());
+    setUpCatalog(controller);
     controller.toggle('office-refresh');
     controller.toggle('hepa-decontamination');
     controller.toggle('duct-treatment');
@@ -29,6 +39,7 @@ void main() {
   test('checkout rejects missing schedule without creating order', () async {
     final orders=FakeOrders();
     final controller=CheckoutController(orders);
+    setUpCatalog(controller);
     controller.toggle('office-refresh');
     expect(await controller.submit(),isNull);
     expect(orders.creates,0);
