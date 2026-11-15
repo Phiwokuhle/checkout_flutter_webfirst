@@ -13,6 +13,7 @@ class LocalOrderLink extends Link {
       final operation=request.operation.operationName;
       if(operation=='CreateOrder'){
         final input=Map<String,dynamic>.from(request.variables['input'] as Map);
+        if(input['cardToken']!='tok_visa_4242')throw StateError('Invalid demo card token');
         final order=await _store.create(
           input['requestId'] as String,
           List<String>.from(input['serviceIds'] as List),
