@@ -12,7 +12,6 @@ class AssessmentShell extends StatelessWidget {
     'Sign In',
     'Catalog & Checkout',
     'Order Details',
-    'Error States',
   ];
 
   @override
@@ -128,7 +127,7 @@ class AssessmentShell extends StatelessWidget {
       color: Colors.white,
       child: const Center(
         child: Text(
-          'Refreshi Checkout Engine • Flutter Assessment',
+          'Senior Flutter Developer - Phiwo',
           style: TextStyle(fontSize: 12, color: AppColors.muted),
         ),
       ),
