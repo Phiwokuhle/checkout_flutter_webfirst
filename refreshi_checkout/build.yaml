@@ -7,8 +7,3 @@ targets:
           outputDirectory: lib/data/graphql/generated
           clients:
             - graphql
-          scalars:
-            DateTime:
-              type: DateTime
-              fromJsonFunctionName: DateTime.parse
-              toJsonFunctionName: toIso8601String
