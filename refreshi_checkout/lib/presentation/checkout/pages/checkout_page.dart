@@ -22,7 +22,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
    setState(() { loading=true; catalogError=null; });
    try {
      final items=await getIt<GraphqlServiceCatalog>().load();
-     if(mounted)setState(() => services=items);
+     if(mounted){controller.setCatalog(items);setState(() => services=items);}
    } catch (_) {
      if(mounted)setState(() => catalogError='Unable to load services. Please retry.');
    } finally {
