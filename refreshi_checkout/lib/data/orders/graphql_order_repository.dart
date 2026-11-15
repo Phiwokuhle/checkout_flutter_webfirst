@@ -18,7 +18,7 @@ class GraphqlOrderRepository implements OrderRepository {
     ));
     if(result.hasException||result.data==null)throw StateError('Order creation failed');
     final typed=Mutation$CreateOrder.fromJson(result.data!).createOrder;
-    return _map(typed.id,typed.serviceIds,typed.scheduledAt,totalCents,typed.createdAt);
+    return _map(typed.id,typed.serviceIds,DateTime.parse(typed.scheduledAt),totalCents,DateTime.parse(typed.createdAt));
   }
 
   @override
@@ -31,6 +31,6 @@ class GraphqlOrderRepository implements OrderRepository {
     if(result.hasException||result.data==null)throw StateError('Order fetch failed');
     final typed=Query$GetOrder.fromJson(result.data!).order;
     if(typed==null)return null;
-    return _map(typed.id,typed.serviceIds,typed.scheduledAt,typed.totalCents,typed.createdAt);
+    return _map(typed.id,typed.serviceIds,DateTime.parse(typed.scheduledAt),typed.totalCents,DateTime.parse(typed.createdAt));
   }
 }
