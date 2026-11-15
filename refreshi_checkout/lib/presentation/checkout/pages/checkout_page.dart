@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:refreshi_checkout/core/config/route_names.dart';
 import 'package:refreshi_checkout/core/di/injection.dart';
-import 'package:refreshi_checkout/domain/checkout/data/mock_service_catalog.dart';
+import 'package:refreshi_checkout/data/checkout/graphql_service_catalog.dart';
+import 'package:refreshi_checkout/domain/checkout/data/service_model.dart';
 import 'package:refreshi_checkout/domain/checkout/repositories/order_repository.dart';
 import 'package:refreshi_checkout/domain/checkout/state_management/checkout_cubit.dart';
 import 'package:refreshi_checkout/presentation/common/widgets/app_shell.dart';
@@ -15,10 +16,23 @@ class CheckoutPage extends StatefulWidget {
 class _CheckoutPageState extends State<CheckoutPage> {
  late final CheckoutController controller;
  bool loading=true;
+ List<ServiceModel> services=const [];
+ String? catalogError;
+ Future<void> loadCatalog() async {
+   setState(() { loading=true; catalogError=null; });
+   try {
+     final items=await getIt<GraphqlServiceCatalog>().load();
+     if(mounted)setState(() => services=items);
+   } catch (_) {
+     if(mounted)setState(() => catalogError='Unable to load services. Please retry.');
+   } finally {
+     if(mounted)setState(() => loading=false);
+   }
+ }
  @override void initState(){
  super.initState();
  controller=CheckoutController(getIt<OrderRepository>());
- Future<void>.delayed(const Duration(milliseconds:500),(){if(mounted)setState(()=>loading=false);});
+ loadCatalog();
  }
  @override void dispose(){controller.dispose();super.dispose();}
  String money(int cents)=>'R '+(cents/100).toStringAsFixed(2);
@@ -34,8 +48,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
  const SizedBox(height:8),const Text('Choose one or two services and a convenient time.'),
  const SizedBox(height:24),
  if(loading)...[for(var i=0;i<3;i++)...[const AppShimmer(height:110),const SizedBox(height:12)]]
- else...[
- for(final service in MockServiceCatalog.services)...[
+ else if(catalogError!=null)...[
+ Text(catalogError!,style:TextStyle(color:Theme.of(context).colorScheme.error)),
+ OutlinedButton(onPressed:loadCatalog,child:const Text('Retry')),
+ ] else if(services.isEmpty)...[
+ const Text('No services are available right now.'),
+ OutlinedButton(onPressed:loadCatalog,child:const Text('Refresh')),
+ ] else...[
+ for(final service in services)...[
  Card(child:CheckboxListTile(
  value:controller.selected.contains(service.id),
  onChanged:controller.submitting?null:(_)=>controller.toggle(service.id),
