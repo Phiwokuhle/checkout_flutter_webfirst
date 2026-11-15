@@ -33,7 +33,17 @@ class CheckoutController extends ChangeNotifier {
     try{
       _requestId??='RF-${DateTime.now().microsecondsSinceEpoch}';
       return await repository.create(requestId:_requestId!,serviceIds:selected.toList()..sort(),scheduledAt:scheduled,totalCents:totalCents);
-    }catch(e){error='Unable to place order: '+e.toString();return null;}
+    }catch(e){
+      final detail=e.toString().toLowerCase();
+      if(detail.contains('declined')){
+        error='Your saved card could not be authorised. Please try again.';
+      }else if(detail.contains('timed out')||detail.contains('timeout')){
+        error='The payment service took too long to respond. Please retry.';
+      }else{
+        error='We could not place your order. Please retry.';
+      }
+      return null;
+    }
     finally{submitting=false;notifyListeners();}
   }
 }
