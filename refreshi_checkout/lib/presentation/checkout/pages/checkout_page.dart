@@ -18,7 +18,7 @@ class _CheckoutPageState extends State<CheckoutPage>{
  @override void initState(){super.initState();Future<void>.delayed(const Duration(milliseconds:600),(){if(mounted)setState(()=>loading=false);});}
  int get total=>MockServiceCatalog.services.where((s)=>selected.contains(s.id)).fold<int>(0,(a,s)=>a+s.priceCents);
  DateTime? get scheduled=>date==null||time==null?null:DateTime(date!.year,date!.month,date!.day,time!.hour,time!.minute);
- String money(int cents)=>String.fromCharCode(36)+(cents/100).toStringAsFixed(2);
+ String money(int cents)=>'R '+(cents/100).toStringAsFixed(2);
  void toggle(String id){if(submitting)return;setState((){error=null;requestId=null;if(!selected.remove(id)){if(selected.length==2){error='Maximum two services.';}else{selected.add(id);}}});}
  Future<void> submit()async{
   if(submitting)return;
