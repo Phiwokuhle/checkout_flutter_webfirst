@@ -27,8 +27,8 @@ class LocalOrderLink extends Link {
       }else{
         yield Response(response: const <String, dynamic>{}, errors:[GraphQLError(message:'Unsupported operation')]);
       }
-    }catch(_){
-      yield Response(response: const <String, dynamic>{}, errors:[GraphQLError(message:'Local order operation failed')]);
+    }catch(error){
+      yield Response(response: const <String, dynamic>{}, errors:[GraphQLError(message:'Local order operation failed: '+error.toString())]);
     }
   }
   Map<String,dynamic> _toGraphQL(CheckoutOrder order)=>{
