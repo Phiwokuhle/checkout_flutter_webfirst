@@ -23,10 +23,10 @@ class LocalOrderLink extends Link {
           DateTime.parse(input['scheduledAt'] as String),
           input['totalCents'] as int,
         );
-        yield Response(response: const <String, dynamic>{}, data:{'createOrder':_toGraphQL(order)});
+        yield Response(response: const <String, dynamic>{}, data:{'__typename':'Mutation','createOrder':_toGraphQL(order)});
       }else if(operation=='GetOrder'){
         final order=await _store.find(request.variables['id'] as String);
-        yield Response(response: const <String, dynamic>{}, data:{'order':order==null?null:_toGraphQL(order)});
+        yield Response(response: const <String, dynamic>{}, data:{'__typename':'Query','order':order==null?null:_toGraphQL(order)});
       }else{
         yield Response(response: const <String, dynamic>{}, errors:[GraphQLError(message:'Unsupported operation')]);
       }
