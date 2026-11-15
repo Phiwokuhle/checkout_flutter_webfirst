@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:graphql/client.dart';
+import 'package:gql/language.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/checkout/data/order_store.dart';
 
@@ -10,7 +11,7 @@ class LocalOrderLink extends Link {
   @override
   Stream<Response> request(Request request,[NextLink? forward]) async* {
     try {
-      final operation=request.operation.operationName;
+      final operation=request.operation.operationName ?? (printNode(request.operation.document).contains('CreateOrder') ? 'CreateOrder' : 'GetOrder');
       if(operation=='CreateOrder'){
         final input=Map<String,dynamic>.from(request.variables['input'] as Map);
         if(input['cardToken']!='tok_visa_4242')throw StateError('Invalid demo card token');
