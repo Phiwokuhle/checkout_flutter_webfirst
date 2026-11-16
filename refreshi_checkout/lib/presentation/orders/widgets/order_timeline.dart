@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:refreshi_checkout/domain/checkout/data/order_store.dart';
 
 class OrderTimeline extends StatelessWidget {
-  const OrderTimeline({super.key, required this.order});
+  const OrderTimeline({super.key, required this.order, required this.holdPlaced});
   final CheckoutOrder order;
+  final bool holdPlaced;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -16,10 +17,10 @@ class OrderTimeline extends StatelessWidget {
       ),
       ListTile(
         leading: Icon(
-          order.holdPlaced ? Icons.check_circle : Icons.hourglass_top,
-          color: order.holdPlaced ? Colors.teal : Colors.orange,
+          holdPlaced ? Icons.check_circle : Icons.hourglass_top,
+          color: holdPlaced ? Colors.teal : Colors.orange,
         ),
-        title: Text(order.holdPlaced ? 'Hold Placed' : 'Hold Pending'),
+        title: Text(holdPlaced ? 'Hold Placed' : 'Hold Pending'),
       ),
     ],
   );
