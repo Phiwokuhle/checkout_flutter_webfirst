@@ -1,0 +1,9 @@
+targets:
+  $default:
+    builders:
+      graphql_codegen:
+        options:
+          assetsPath: lib/data/graphql/**.graphql
+          outputDirectory: generated
+          clients:
+            - graphql

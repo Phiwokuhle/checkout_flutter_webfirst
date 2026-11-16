@@ -1,0 +1,33 @@
+{
+  "data": {
+    "services": [
+      {
+        "__typename": "Service",
+        "id": "office-refresh",
+        "name": "Standard Office Air Refresh",
+        "description": "60-minute office air refresh service.",
+        "durationMinutes": 60,
+        "priceCents": 4800,
+        "badge": "Standard"
+      },
+      {
+        "__typename": "Service",
+        "id": "hepa-decontamination",
+        "name": "Deep HEPA Decontamination",
+        "description": "90-minute deep cleaning service.",
+        "durationMinutes": 90,
+        "priceCents": 8500,
+        "badge": "Deep Clean"
+      },
+      {
+        "__typename": "Service",
+        "id": "duct-treatment",
+        "name": "Bio-Enzymatic Duct Treatment",
+        "description": "Targeted duct cleaning treatment.",
+        "durationMinutes": 45,
+        "priceCents": 12000,
+        "badge": "Add-on"
+      }
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+type Query { order(id: ID!): Order }
+type Mutation { createOrder(input: CreateOrderInput!): Order! }
+input CreateOrderInput { requestId: ID!, serviceIds: [ID!]!, scheduledAt: String!, totalCents: Int!, cardToken: String! }
+enum HoldStatus { PENDING PLACED }
+type Order { id: ID!, serviceIds: [ID!]!, scheduledAt: String!, totalCents: Int!, createdAt: String!, holdStatus: HoldStatus! }

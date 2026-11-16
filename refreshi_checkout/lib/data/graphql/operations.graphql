@@ -1,0 +1,8 @@
+mutation CreateOrder($input: CreateOrderInput!) {
+ createOrder(input: $input) { id serviceIds scheduledAt totalCents createdAt holdStatus }
+}
+query GetOrder($id: ID!) {
+ order(id: $id) { id serviceIds scheduledAt totalCents createdAt holdStatus }
+}
+
+query GetServices { services { id name description durationMinutes priceCents badge } }
