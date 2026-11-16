@@ -1,11 +1,13 @@
 import 'package:graphql/client.dart';
 import 'package:gql/language.dart';
 import '../../domain/checkout/data/service_model.dart';
+import '../../domain/checkout/repositories/service_catalog_repository.dart';
 
-class GraphqlServiceCatalog {
+class GraphqlServiceCatalog implements ServiceCatalogRepository {
   const GraphqlServiceCatalog(this.client);
   final GraphQLClient client;
 
+  @override
   Future<List<ServiceModel>> load() async {
     final result = await client.query(QueryOptions(
       document: parseString(r'query GetServices { services { id name description durationMinutes priceCents badge } }'),
