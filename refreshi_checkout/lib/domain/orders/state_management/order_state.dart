@@ -10,6 +10,7 @@ class OrderState with _$OrderState {
   const factory OrderState({
     @Default(OrderStatus.initial) OrderStatus status,
     CheckoutOrder? order,
+    @Default(false) bool holdPlaced,
     String? error,
   }) = _OrderState;
 }
