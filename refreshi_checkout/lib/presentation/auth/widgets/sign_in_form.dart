@@ -3,6 +3,7 @@ import 'package:refreshi_checkout/core/config/auth_session.dart';
 import 'package:refreshi_checkout/core/di/injection.dart';
 import 'package:refreshi_checkout/core/theme/app_theme.dart';
 import 'package:refreshi_checkout/presentation/common/widgets/primary_button.dart';
+import 'demo_session_notice.dart';
 
 /// Owns form state and input controllers; the page only composes this widget.
 class SignInForm extends StatefulWidget {
@@ -110,40 +111,16 @@ class _SignInFormState extends State<SignInForm> {
               },
             ),
             const SizedBox(height: 18),
-            const _DemoSessionNotice(),
+            const DemoSessionNotice(),
             const SizedBox(height: 24),
             PrimaryButton(
-              label: _submitting ? 'Signing in…' : 'Sign In',
+              label: 'Sign In',
+              loading: _submitting,
               onPressed: _submitting ? null : _submit,
             ),
           ],
         ),
       ),
-    ),
-  );
-}
-
-class _DemoSessionNotice extends StatelessWidget {
-  const _DemoSessionNotice();
-
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: AppColors.lavender,
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: const Row(
-      children: [
-        Icon(Icons.verified_user_outlined, color: AppColors.primary),
-        SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            'Demo session • No real credentials required',
-            style: TextStyle(fontSize: 12),
-          ),
-        ),
-      ],
     ),
   );
 }
