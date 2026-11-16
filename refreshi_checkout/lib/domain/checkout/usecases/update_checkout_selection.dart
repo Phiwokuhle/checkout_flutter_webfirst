@@ -1,9 +1,8 @@
-
-
 import 'package:refreshi_checkout/domain/checkout/data/service_model.dart';
 
 class CheckoutSelection {
   const CheckoutSelection(this.ids, this.totalCents, this.error);
+
   final List<String> ids;
   final int totalCents;
   final String? error;
@@ -17,7 +16,9 @@ class UpdateCheckoutSelection {
     required List<String> selectedIds,
     required String toggledId,
   }) {
-    final prices = {for (final service in catalog) service.id: service.priceCents};
+    final prices = {
+      for (final service in catalog) service.id: service.priceCents,
+    };
     final selected = [...selectedIds];
     String? error;
     if (!selected.remove(toggledId)) {

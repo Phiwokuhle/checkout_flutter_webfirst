@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../usecases/get_hold_refresh_delay.dart';
-import '../usecases/get_order.dart';
+import 'package:refreshi_checkout/domain/orders/usecases/get_hold_refresh_delay.dart';
+import 'package:refreshi_checkout/domain/orders/usecases/get_order.dart';
 import 'order_event.dart';
 import 'order_state.dart';
 
