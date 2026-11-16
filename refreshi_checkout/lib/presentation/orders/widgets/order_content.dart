@@ -41,7 +41,7 @@ class OrderContent extends StatelessWidget {
       ] else if (state.order != null) ...[
         OrderSummaryCard(order: state.order!),
         const SizedBox(height: 20),
-        OrderTimeline(order: state.order!),
+        OrderTimeline(order: state.order!, holdPlaced: state.holdPlaced),
         const SizedBox(height: 12),
         SelectableText(
           'Order link: ${Uri.base.origin}${RoutePaths.order(state.order!.id)}',
