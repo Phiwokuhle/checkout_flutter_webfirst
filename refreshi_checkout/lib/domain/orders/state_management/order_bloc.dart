@@ -45,7 +45,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         emit(const OrderState(status: OrderStatus.notFound, error: 'Order not found.'));
         return;
       }
-      emit(OrderState(status: OrderStatus.ready, order: order));
+      emit(OrderState(status: OrderStatus.ready, order: order, holdPlaced: order.holdPlaced));
       _timer?.cancel();
       final delay = _refreshDelay(order, DateTime.now());
       if (delay != null) {
