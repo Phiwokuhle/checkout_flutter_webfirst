@@ -17,7 +17,7 @@ class DemoSessionNotice extends StatelessWidget {
         SizedBox(width: 12),
         Expanded(
           child: Text(
-            'Demo session • No real credentials required',
+            'Demo session, No real credentials required',
             style: TextStyle(fontSize: 12),
           ),
         ),

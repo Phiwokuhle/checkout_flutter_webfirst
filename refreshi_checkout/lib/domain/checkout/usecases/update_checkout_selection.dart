@@ -1,4 +1,6 @@
-import '../data/service_model.dart';
+
+
+import 'package:refreshi_checkout/domain/checkout/data/service_model.dart';
 
 class CheckoutSelection {
   const CheckoutSelection(this.ids, this.totalCents, this.error);

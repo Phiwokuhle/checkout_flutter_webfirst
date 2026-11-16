@@ -1,7 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../usecases/load_checkout_catalog.dart';
-import '../usecases/update_checkout_selection.dart';
-import '../usecases/place_checkout_order.dart';
+import 'package:refreshi_checkout/domain/checkout/usecases/load_checkout_catalog.dart';
+import 'package:refreshi_checkout/domain/checkout/usecases/place_checkout_order.dart';
+import 'package:refreshi_checkout/domain/checkout/usecases/update_checkout_selection.dart';
+
 import 'checkout_event.dart';
 import 'checkout_state.dart';
 

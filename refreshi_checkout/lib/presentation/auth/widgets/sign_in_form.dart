@@ -5,7 +5,6 @@ import 'package:refreshi_checkout/core/theme/app_theme.dart';
 import 'package:refreshi_checkout/presentation/common/widgets/primary_button.dart';
 import 'demo_session_notice.dart';
 
-/// Owns form state and input controllers; the page only composes this widget.
 class SignInForm extends StatefulWidget {
   const SignInForm({super.key});
 
@@ -15,8 +14,8 @@ class SignInForm extends StatefulWidget {
 
 class _SignInFormState extends State<SignInForm> {
   final _formKey = GlobalKey<FormState>();
-  final _email = TextEditingController(text: 'developer@refreshi.demo');
-  final _password = TextEditingController(text: 'assessment');
+  final _email = TextEditingController(text: 'email@refreshi.com');
+  final _password = TextEditingController(text: 'P@sswordOne23');
   bool _obscurePassword = true;
   bool _submitting = false;
 
@@ -35,7 +34,7 @@ class _SignInFormState extends State<SignInForm> {
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Unable to sign in. Please retry.')),
+          const SnackBar(content: Text('Oops!! Unable to sign in. Please retry.')),
         );
       }
     } finally {

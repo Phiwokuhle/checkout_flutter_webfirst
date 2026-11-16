@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../data/service_model.dart';
+import 'package:refreshi_checkout/domain/checkout/data/service_model.dart';
+
 
 part 'checkout_state.freezed.dart';
 
