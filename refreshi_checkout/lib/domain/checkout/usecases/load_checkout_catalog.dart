@@ -1,8 +1,8 @@
-import '../../../data/checkout/graphql_service_catalog.dart';
+import '../repositories/service_catalog_repository.dart';
 import '../data/service_model.dart';
 
 class LoadCheckoutCatalog {
   const LoadCheckoutCatalog(this.catalog);
-  final GraphqlServiceCatalog catalog;
+  final ServiceCatalogRepository catalog;
   Future<List<ServiceModel>> call() => catalog.load();
 }
