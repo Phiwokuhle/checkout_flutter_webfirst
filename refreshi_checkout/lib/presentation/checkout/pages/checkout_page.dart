@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:refreshi_checkout/core/config/route_names.dart';
-import 'package:refreshi_checkout/core/config/za_format.dart';
 import 'package:refreshi_checkout/core/di/injection.dart';
 import 'package:refreshi_checkout/data/checkout/graphql_service_catalog.dart';
 import 'package:refreshi_checkout/domain/checkout/repositories/order_repository.dart';
@@ -12,7 +11,11 @@ import 'package:refreshi_checkout/domain/checkout/state_management/checkout_stat
 import 'package:refreshi_checkout/domain/checkout/usecases/load_checkout_catalog.dart';
 import 'package:refreshi_checkout/domain/checkout/usecases/place_checkout_order.dart';
 import 'package:refreshi_checkout/presentation/common/widgets/app_shell.dart';
-import 'package:refreshi_checkout/presentation/common/widgets/app_shimmer.dart';
+import 'package:refreshi_checkout/presentation/checkout/widgets/catalog_status.dart';
+import 'package:refreshi_checkout/presentation/checkout/widgets/service_selection.dart';
+import 'package:refreshi_checkout/presentation/checkout/widgets/schedule_picker.dart';
+import 'package:refreshi_checkout/presentation/checkout/widgets/saved_payment_method.dart';
+import 'package:refreshi_checkout/presentation/checkout/widgets/checkout_summary.dart';
 
 class CheckoutPage extends StatelessWidget {
   const CheckoutPage({super.key});
@@ -44,8 +47,10 @@ class _CheckoutView extends StatelessWidget {
         constraints: const BoxConstraints(maxWidth: 780),
         child: BlocBuilder<CheckoutBloc, CheckoutState>(
           builder: (context, state) {
-            final bloc = context.read<CheckoutBloc>();
-            final busy = state.status == CheckoutStatus.submitting;
+            final showingCatalog = state.status != CheckoutStatus.initial &&
+                state.status != CheckoutStatus.loading &&
+                state.status != CheckoutStatus.failure &&
+                state.services.isNotEmpty;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -54,113 +59,16 @@ class _CheckoutView extends StatelessWidget {
                 const SizedBox(height: 8),
                 const Text('Choose one or two services and a convenient time.'),
                 const SizedBox(height: 24),
-                if (state.status == CheckoutStatus.initial ||
-                    state.status == CheckoutStatus.loading)
-                  for (var i = 0; i < 3; i++) ...[
-                    const AppShimmer(height: 110),
-                    const SizedBox(height: 12),
-                  ]
-                else if (state.status == CheckoutStatus.failure) ...[
-                  Text(state.error ?? 'Unable to load services.',
-                      style: TextStyle(color: Theme.of(context).colorScheme.error)),
-                  OutlinedButton(
-                    onPressed: () => bloc.add(const CheckoutEvent.started()),
-                    child: const Text('Retry'),
-                  ),
-                ] else if (state.services.isEmpty) ...[
-                  const Text('No services are available right now.'),
-                  OutlinedButton(
-                    onPressed: () => bloc.add(const CheckoutEvent.started()),
-                    child: const Text('Refresh'),
-                  ),
-                ] else ...[
-                  for (final service in state.services) ...[
-                    Card(
-                      child: CheckboxListTile(
-                        value: state.selectedIds.contains(service.id),
-                        onChanged: busy
-                            ? null
-                            : (_) => bloc.add(CheckoutEvent.serviceToggled(service.id)),
-                        title: Text(service.name),
-                        subtitle: Text(
-                          '${service.description} • ${service.durationMinutes} min • ${ZaFormat.money(service.priceCents)}',
-                        ),
-                        controlAffinity: ListTileControlAffinity.leading,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                  ],
+                if (!showingCatalog)
+                  CatalogStatus(state: state)
+                else ...[
+                  ServiceSelection(state: state),
                   const SizedBox(height: 20),
-                  Text('Schedule', style: Theme.of(context).textTheme.titleLarge),
-                  const SizedBox(height: 12),
-                  Wrap(
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: [
-                      OutlinedButton.icon(
-                        icon: const Icon(Icons.calendar_today),
-                        label: Text(state.date == null
-                            ? 'Choose date'
-                            : 'Date: ${state.date!.day}/${state.date!.month}/${state.date!.year}'),
-                        onPressed: busy
-                            ? null
-                            : () async {
-                                final date = await showDatePicker(
-                                  context: context,
-                                  initialDate: state.date ??
-                                      DateTime.now().add(const Duration(days: 1)),
-                                  firstDate: DateTime.now(),
-                                  lastDate: DateTime.now().add(const Duration(days: 365)),
-                                );
-                                if (date != null && context.mounted) {
-                                  bloc.add(CheckoutEvent.dateChanged(date));
-                                }
-                              },
-                      ),
-                      OutlinedButton.icon(
-                        icon: const Icon(Icons.schedule),
-                        label: Text(state.hour == null
-                            ? 'Choose time'
-                            : TimeOfDay(hour: state.hour!, minute: state.minute!)
-                                .format(context)),
-                        onPressed: busy
-                            ? null
-                            : () async {
-                                final time = await showTimePicker(
-                                  context: context,
-                                  initialTime: const TimeOfDay(hour: 9, minute: 0),
-                                );
-                                if (time != null && context.mounted) {
-                                  bloc.add(CheckoutEvent.timeChanged(
-                                      time.hour, time.minute));
-                                }
-                              },
-                      ),
-                    ],
-                  ),
+                  SchedulePicker(state: state),
                   const SizedBox(height: 24),
-                  const Card(
-                    child: ListTile(
-                      leading: Icon(Icons.credit_card),
-                      title: Text('Visa ending in 4242'),
-                      subtitle: Text('Saved card token • simulated payment hold'),
-                    ),
-                  ),
+                  const SavedPaymentMethod(),
                   const SizedBox(height: 16),
-                  Text('Total: ${ZaFormat.money(state.totalCents)}',
-                      style: Theme.of(context).textTheme.titleLarge),
-                  if (state.error != null) ...[
-                    const SizedBox(height: 12),
-                    Text(state.error!,
-                        style: TextStyle(color: Theme.of(context).colorScheme.error)),
-                  ],
-                  const SizedBox(height: 18),
-                  FilledButton(
-                    onPressed: busy
-                        ? null
-                        : () => bloc.add(const CheckoutEvent.submitted()),
-                    child: Text(busy ? 'Placing order…' : 'Confirm & place hold'),
-                  ),
+                  CheckoutSummary(state: state),
                 ],
               ],
             );
