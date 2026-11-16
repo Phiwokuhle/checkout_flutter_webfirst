@@ -7,9 +7,9 @@ class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
 
   @override
-  Widget build(BuildContext context) => const AssessmentShell(
+  Widget build(BuildContext context) => AssessmentShell(
     activeStep: 0,
-    child: Column(
+    child: const Column(
       children: [
         SizedBox(height: 24),
         ConstrainedBox(
